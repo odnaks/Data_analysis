@@ -21,7 +21,7 @@ def geo_classification(row):
                 return region
     return "undefined"
 
-data = pd.read_csv('keywords.csv')
+data = pd.read_csv('datasets/keywords.csv')
 #print (data.head())
 data['region'] = data.apply(geo_classification, axis = 1)
 data = data.groupby('region').sum()
