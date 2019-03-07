@@ -27,7 +27,7 @@ while (1):
             time_exam_str = time_exam.strftime("%d.%m")
             if time_exam_str == time_str:
                 print ("{}/{}".format(index['nbr_subscribers'], index['max_people']))
-                if index['nbr_subscribers'] <= 120:
+                if index['nbr_subscribers'] < 120:
                     os.system("afplay music.mp3 &")
                     sleep(3)
                     os.system("killall  afplay")
