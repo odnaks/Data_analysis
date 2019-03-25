@@ -2,10 +2,6 @@ import pandas as pd
 import os
 from os.path import join, getsize
 
-""" Напишите цикл, который собирает содержимое
-файлов папки data в единый датафрейм data.
-Сколько строк получится в датафрейме data? """
-
 files = os.listdir('datasets')
 for file in files:
     if file.find('ratings_') == -1:

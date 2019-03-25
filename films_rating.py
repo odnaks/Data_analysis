@@ -1,8 +1,5 @@
 import pandas as pd
 
-""" Расчет и вывод рейтинга для каждого фильма
-       на основе оценок всех пользователей """
-
 data = pd.read_csv('datasets/ratings.csv')
 rating_of_movies = data.pivot_table(index = ['movieId', 'rating'],
     values = 'timestamp', aggfunc = 'count').reset_index()

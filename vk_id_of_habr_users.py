@@ -1,8 +1,6 @@
 import requests
 import time
 
-""" id участников группы habr в вк """
-
 count = 1000
 offset = 0
 user_ids = []
