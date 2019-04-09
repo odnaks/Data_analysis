@@ -5,8 +5,11 @@ import sys
 
 ########################################################################
 
-file1 = "feb.xlsx" # входной
-file2 = "proj.xlsx" # список всех проектов
+file1 = "datasets/feb.xlsx" # входной
+file2 = "datasets/proj.xlsx" # список всех проектов
+
+file3 = "out_credit_stat/table.xlsx" # выходная сводка (основная)
+file4 = "out_credit_stat/data.xlsx" # выходная таблица (общая)
 
 ################################### Строки
 
@@ -223,7 +226,7 @@ new_data = new_data.append(pd.DataFrame([[str5_9, str5_5, str5_5]], columns = co
 ##################
 
 new_data.set_index(col1_1, inplace=True)
-writer = pd.ExcelWriter('result.xlsx', engine='xlsxwriter')
+writer = pd.ExcelWriter(file3, engine='xlsxwriter')
 new_data.to_excel(writer, 'Sheet1')
 
 workbook = writer.book
@@ -261,6 +264,6 @@ writer.save()
 
 ####################
 
-writer_test = pd.ExcelWriter('test.xlsx', engine='xlsxwriter')
+writer_test = pd.ExcelWriter(file4, engine='xlsxwriter')
 data.to_excel(writer_test, 'Sheet1')
 writer_test.save()
