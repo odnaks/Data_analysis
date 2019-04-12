@@ -2,14 +2,15 @@ import pandas as pd
 import time
 import numpy as np
 import sys
+import os
 
 ########################################################################
 
-file1 = "datasets/feb.xlsx" # входной
-file2 = "datasets/proj.xlsx" # список всех проектов
+file1 = "../datasets/feb.xlsx" # входной
+file2 = "../datasets/proj.xlsx" # список всех проектов
 
-file3 = "out_credit_stat/table.xlsx" # выходная сводка (основная)
-file4 = "out_credit_stat/data.xlsx" # выходная таблица (общая)
+file3 = "out/table.xlsx" # выходная сводка (основная)
+file4 = "out/data.xlsx" # выходная таблица (общая)
 
 ################################### Строки
 
@@ -34,7 +35,7 @@ T5 = "T+5"
 T6 = "T+6"
 
 #########
-str3_1 = "Операция не соответствует режиму (целевому назначению) счета"
+str3_1 = "Операция не соответствует режиму (целевому назначению) счёта"
 str3_2 = "Не предоставлены обосновывающие документы"
 str3_3 = "Предоставлен не полный комплект обосновывающих документов"
 
@@ -141,6 +142,8 @@ data = pd.merge(data, proj[[col8, col1]], on = col8, how='left')
 
 ######################
 
+os.makedirs('./out')
+
 data[col4] = np.busday_count( data[col9].values.astype('datetime64[D]'), data[col10].values.astype('datetime64[D]'))
 data[col3] = data[col9].dt.hour
 data[col5] = data.apply(hour_bin, axis = 1)
@@ -197,11 +200,16 @@ nec_naz = len(data_ak[data_ak[col7] == str3_1])
 zamech = len(data_ak[(data_ak[col7] == str3_2) | (data_ak[col7] == str3_3)])
 proch = sum_pr - nec_naz - zamech
 
-new_data = new_data.append(pd.DataFrame([[col1_4, col1_5, col1_3]], columns = col), ignore_index=True)
-new_data = new_data.append(pd.DataFrame([[str5_5, str4_1, nec_naz]], columns = col), ignore_index=True)
-new_data = new_data.append(pd.DataFrame([[str5_5, str4_2, zamech]], columns = col), ignore_index=True)
-new_data = new_data.append(pd.DataFrame([[str5_5, str4_3, proch]], columns = col), ignore_index=True)
-new_data = new_data.append(pd.DataFrame([[str5_5, str5_5, sum_pr]], columns = col), ignore_index=True)
+sum_nec = data_ak[data_ak[col7] == str3_1][col12].sum()
+sum_zamech = data_ak[(data_ak[col7] == str3_2) | (data_ak[col7] == str3_3)][col12].sum()
+sum_all = data_ak[data_ak[col2] == str2_2][col12].sum()
+sum_proch = sum_all - sum_nec - sum_zamech
+
+new_data = new_data.append(pd.DataFrame([[col1_5, col1_3, "Сумма"]], columns = col), ignore_index=True)
+new_data = new_data.append(pd.DataFrame([[str4_1, nec_naz, sum_nec]], columns = col), ignore_index=True)
+new_data = new_data.append(pd.DataFrame([[str4_2, zamech, sum_zamech]], columns = col), ignore_index=True)
+new_data = new_data.append(pd.DataFrame([[str4_3, proch, sum_proch]], columns = col), ignore_index=True)
+new_data = new_data.append(pd.DataFrame([[str5_5, sum_pr, sum_all]], columns = col), ignore_index=True)
 
 ###################
 
@@ -253,7 +261,7 @@ worksheet.conditional_format("A12", {'type': 'unique',
                                     'format': akc})
 worksheet.conditional_format("A24", {'type': 'unique',
                                     'format': akc})
-worksheet.conditional_format("B14:C14", {'type': 'unique',
+worksheet.conditional_format("A14:C14", {'type': 'unique',
                                     'format': akc})
 
 ######
